@@ -1,57 +1,125 @@
-let selectedYear = null;
-let selectedFile = null;
+const yearSelect = document.getElementById('yearSelect');
+const fileSelect = document.getElementById('fileSelect');
+const pdfViewer = document.getElementById('pdfViewer');
+const pdfCanvas = document.getElementById('pdfCanvas');
+const ctx = pdfCanvas.getContext('2d');
+const prevPageBtn = document.getElementById('prevPage');
+const nextPageBtn = document.getElementById('nextPage');
+const pdfControls = document.getElementById('pdfControls');
+let pdfDoc = null;
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
-// Tombol tahun
-document.querySelectorAll('[id^=btn-20]').forEach(btn => {
-    btn.addEventListener('click', () => {
-        // Tandai tahun yang dipilih
-        document.querySelectorAll('[id^=btn-20]').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+let currentPage = 1;
+let totalPages = 1;
 
-        selectedYear = btn.id.replace('btn-', '');
-
-        // Reset pilihan file
-        selectedFile = null;
-        document.getElementById('pdf-buttons').innerHTML = ''; // Kosongkan dulu tombol laporan
-        document.getElementById('pdf-canvas').classList.add('d-none');
-
-        // Misalnya isi tombol file:
-        const files = ['LKPK-LKP-01.pdf', 'LKPK-LKP-02.pdf', 'LKPK-LKP-03.pdf', 'LKPK-LKP-04.pdf', 'LKPK-LKP-05.pdf'];
-        files.forEach(file => {
-            const button = document.createElement('button');
-            button.className = 'btn btn-outline-secondary';
-            button.textContent = file;
-            button.addEventListener('click', () => {
-                // Tandai file yang dipilih
-                document.querySelectorAll('#pdf-buttons button').forEach(b => b.classList.remove('active'));
-                button.classList.add('active');
-                selectedFile = file;
-                loadPDF(`assets/pdf/${selectedYear}/${selectedFile}`);
-            });
-            document.getElementById('pdf-buttons').appendChild(button);
-        });
-    });
-});
-
-function loadPDF(url) {
-    const viewer = document.getElementById('pdf-viewer');
-    viewer.classList.remove('d-none');
-
-    const canvas = document.getElementById('pdf-canvas');
-    const ctx = canvas.getContext('2d');
-
-    pdfjsLib.getDocument(url).promise.then(pdf => {
-        return pdf.getPage(1);
-    }).then(page => {
+// Fungsi untuk render halaman pertama dari PDF
+function renderPage(pageNumber) {
+    pdfDoc.getPage(pageNumber).then(function (page) {
         const viewport = page.getViewport({ scale: 1.5 });
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
+        pdfCanvas.height = viewport.height;
+        pdfCanvas.width = viewport.width;
 
-        return page.render({ canvasContext: ctx, viewport: viewport }).promise;
-    }).catch(error => {
-        console.error("Gagal load PDF:", error);
-        alert("Gagal membuka file PDF.");
+        const renderContext = {
+            canvasContext: ctx,
+            viewport: viewport
+        };
+
+        page.render(renderContext).promise.then(() => {
+            pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages}`;
+            prevPageBtn.disabled = currentPage <= 1;
+            nextPageBtn.disabled = currentPage >= totalPages;
+        });
+    }).catch(err => {
+        console.error("Gagal merender halaman:", err);
+        pdfViewer.style.display = 'none';
     });
 }
+
+// Fungsi untuk menampilkan PDF viewer
+function renderPDF(filePath) {
+    if (!filePath) return;
+
+    pdfjsLib.getDocument(filePath).promise.then(function (loadedPdf) {
+        pdfDoc = loadedPdf;
+        totalPages = pdfDoc.numPages;
+        currentPage = 1;
+
+        pdfViewer.style.display = 'block';
+        pdfControls.style.display = totalPages > 1 ? 'block' : 'none';
+
+        renderPage(1); // Render halaman pertama
+    }).catch(error => {
+        console.error("Gagal memuat PDF:", error);
+        alert("File PDF tidak dapat dimuat. Pastikan file tersedia dan tidak corrupt.");
+        pdfViewer.style.display = 'none';
+        pdfControls.style.display = 'none';
+    });
+}
+
+// Tombol navigasi halaman
+prevPageBtn.addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage--;
+        renderPage(currentPage);
+    }
+});
+
+nextPageBtn.addEventListener('click', () => {
+    if (currentPage < totalPages) {
+        currentPage++;
+        renderPage(currentPage);
+    }
+});
+
+// Update pilihan file berdasarkan tahun yang dipilih
+yearSelect.addEventListener('change', function () {
+    const year = yearSelect.value;
+    fileSelect.innerHTML = '<option value="">Pilih File</option>';
+
+    if (year) {
+        const files = getFilesForYear(year);
+        files.forEach(file => {
+            const option = document.createElement('option');
+            option.value = file;
+            option.textContent = file;
+            fileSelect.appendChild(option);
+        });
+    }
+
+    // Sembunyikan viewer & reset canvas
+    pdfViewer.style.display = 'none';
+    ctx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+});
+
+// Pilih file untuk merender PDF
+fileSelect.addEventListener('change', function () {
+    const year = yearSelect.value;
+    const file = fileSelect.value;
+    const filePath = (year && file) ? `assets/pdf/${year}/${file}` : '';
+
+    // Sembunyikan viewer & reset canvas sebelum load baru
+    pdfViewer.style.display = 'none';
+    ctx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+
+    if (filePath) {
+        renderPDF(filePath);
+    }
+});
+
+// Fungsi untuk mendapatkan file berdasarkan tahun
+function getFilesForYear(year) {
+    const fileMapping = {
+        '2022': ['LKPK-LKP-01.pdf', 'LKPK-LKP-02.pdf', 'LKPK-LKP-03.pdf', 'LKPK-LKP-04.pdf', 'LKPK-LKP-05.pdf'],
+        '2023': ['LKPK-LKP-01.pdf', 'LKPK-LKP-02.pdf', 'LKPK-LKP-03.pdf', 'LKPK-LKP-04.pdf', 'LKPK-LKP-05.pdf'],
+        '2024': ['LKPK-LKP-01.pdf', 'LKPK-LKP-02.pdf', 'LKPK-LKP-03.pdf', 'LKPK-LKP-04.pdf', 'LKPK-LKP-05.pdf']
+    };
+    return fileMapping[year] || [];
+}
+
+// Saat halaman pertama kali dimuat
+document.addEventListener('DOMContentLoaded', function () {
+    yearSelect.value = '';
+    fileSelect.innerHTML = '<option value="">Pilih File</option>';
+    pdfViewer.style.display = 'none';
+});

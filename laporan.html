@@ -28,9 +28,23 @@
     <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
     <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
+    <!-- PDF.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.css" rel="stylesheet">
+
     <!-- Main CSS File -->
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+
     <link href="assets/css/main.css" rel="stylesheet">
     <link href="assets/css/custom.css" rel="stylesheet">
+
 
     <!-- =======================================================
   * Template Name: NewBiz
@@ -41,9 +55,9 @@
   ======================================================== -->
 </head>
 
-<body class="starter-page-page">
+<body class="index-page">
 
-    <header id="header" class="header d-flex align-items-center sticky-top">
+    <header id="header" class="header d-flex align-items-center">
         <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
 
             <a href="index.html" class="logo d-flex align-items-center">
@@ -82,41 +96,42 @@
             </div>
         </div><!-- End Page Title -->
 
-        <section id="pdf-selection" class="portfolio section">
-            <div class="container">
-                <div class="alert alert-warning text-danger blink2 text-center" id="disable-idm-alert" role="alert">
-                    <strong>Perhatian:</strong> Pastikan IDM atau aplikasi download manager lainnya dimatikan agar PDF
-                    dapat dibaca secara langsung di halaman ini.
+        <div class="container mt-4">
+            <!-- Alert -->
+            <div class="alert alert-warning" role="alert">
+                Pastikan aplikasi download manager seperti IDM tidak aktif agar file dapat dibaca secara online.
+            </div>
+
+            <!-- Year and File Selection -->
+            <div class="d-flex justify-content-start gap-2 mb-4">
+                <select id="yearSelect" class="form-select" style="width: 200px;">
+                    <option value="">Pilih Tahun</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                </select>
+
+                <select id="fileSelect" class="form-select" style="width: 200px;">
+                    <!-- Files will be populated here dynamically -->
+                </select>
+            </div>
+
+            <!-- PDF Viewer (Initially Hidden) -->
+            <div id="pdfViewer" class="pdf-viewer-container text-center" style=" display:none;">
+                <canvas id="pdfCanvas"></canvas>
+                <div id="pdfControls" class="mt-4 mb-4 d-flex flex-row gap-2 justify-content-center align-items-center"
+                    style="display: none;">
+                    <button id="prevPage" class="btn btn-primary btn-sm">Previous</button>
+                    <span id="pageInfo">Halaman 1 dari 1</span>
+                    <button id="nextPage" class="btn btn-primary btn-sm">Next</button>
                 </div>
 
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        <h5 class="mb-3">Pilih Tahun Laporan</h5>
-                        <div class="btn-group" role="group" aria-label="Tahun Laporan">
-                            <button id="btn-2022" type="button" class="btn btn-outline-primary">Tahun 2022</button>
-                            <button id="btn-2023" type="button" class="btn btn-outline-primary">Tahun 2023</button>
-                            <button id="btn-2024" type="button" class="btn btn-outline-primary">Tahun 2024</button>
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <h5 class="mb-3">Pilih Laporan</h5>
-                        <div id="pdf-buttons" class="btn-group" role="group" aria-label="Pilih Laporan">
-                            <!-- Buttons for PDF files will be dynamically generated -->
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="border p-3 bg-light rounded shadow-sm d-none" id="pdf-viewer">
-                        <canvas id="pdf-canvas" style="width: 100%; border: 1px solid #ccc;"></canvas>
-                    </div>
-                </div>
             </div>
-        </section>
+        </div>
     </main>
 
     <footer id="footer" class="footer dark-background">
-
-        <div class="container copyright text-center mt-4">
+        <div class="container copyright text-center">
             <p>© <span>Copyright</span> <strong>BPR Ronabasa</strong> <span>All Rights Reserved</span>
             </p>
             <div class="credits">
@@ -147,12 +162,12 @@
     <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
     <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
 
-    <!-- PDF.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script src="assets/js/pdf.js"></script>
+    <!-- PDF.js Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
 
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/pdf.js"></script>
 
 </body>
 
