@@ -1,73 +1,56 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const btn2022 = document.getElementById('btn-2022');
-    const btn2023 = document.getElementById('btn-2023');
-    const btn2024 = document.getElementById('btn-2024');
-    const pdfButtons = document.getElementById('pdf-buttons');
-    const pdfViewer = document.getElementById('pdf-viewer');
+let selectedYear = null;
+let selectedFile = null;
 
-    // Contoh data file PDF, bisa diisi dengan nama file sesungguhnya
-    const pdfFiles2022 = ['LKPK-LKP-01.pdf', 'LKPK-LKP-02.pdf', 'LKPK-LKP-03.pdf', 'LKPK-LKP-04.pdf', 'LKPK-LKP-05.pdf'];
-    const pdfFiles2023 = ['LKPK-LKP-01.pdf', 'LKPK-LKP-02.pdf', 'LKPK-LKP-03.pdf', 'LKPK-LKP-04.pdf', 'LKPK-LKP-05.pdf'];
-    const pdfFiles2024 = ['LKPK-LKP-01.pdf', 'LKPK-LKP-02.pdf', 'LKPK-LKP-03.pdf', 'LKPK-LKP-04.pdf', 'LKPK-LKP-05.pdf'];
+// Tombol tahun
+document.querySelectorAll('[id^=btn-20]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Tandai tahun yang dipilih
+        document.querySelectorAll('[id^=btn-20]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
 
-    // Function to hide the alert and canvas initially
-    function hideCanvasAndAlert() {
-        pdfViewer.style.display = 'none';
-    }
+        selectedYear = btn.id.replace('btn-', '');
 
-    // Show PDF buttons for selected year
-    function showPDFButtons(year) {
-        let files = [];
-        switch (year) {
-            case '2022': files = pdfFiles2022; break;
-            case '2023': files = pdfFiles2023; break;
-            case '2024': files = pdfFiles2024; break;
-            default: return;
-        }
+        // Reset pilihan file
+        selectedFile = null;
+        document.getElementById('pdf-buttons').innerHTML = ''; // Kosongkan dulu tombol laporan
+        document.getElementById('pdf-canvas').parentElement.parentElement.style.display = 'none';
 
-        // Clear any existing buttons
-        pdfButtons.innerHTML = '';
-
-        // Create a button for each PDF file
+        // Misalnya isi tombol file:
+        const files = ['LKPK-LKP-01.pdf', 'LKPK-LKP-02.pdf', 'LKPK-LKP-03.pdf', 'LKPK-LKP-04.pdf', 'LKPK-LKP-05.pdf'];
         files.forEach(file => {
-            let button = document.createElement('button');
+            const button = document.createElement('button');
+            button.className = 'btn btn-outline-secondary';
             button.textContent = file;
-            button.className = 'btn btn-outline-primary';
-            button.onclick = function () { openPDF(year, file); };
-            pdfButtons.appendChild(button);
+            button.addEventListener('click', () => {
+                // Tandai file yang dipilih
+                document.querySelectorAll('#pdf-buttons button').forEach(b => b.classList.remove('active'));
+                button.classList.add('active');
+                selectedFile = file;
+                loadPDF(`assets/pdf/${selectedYear}/${selectedFile}`);
+            });
+            document.getElementById('pdf-buttons').appendChild(button);
         });
-    }
-
-    // Open the selected PDF
-    function openPDF(year, file) {
-        pdfViewer.style.display = 'block'; // Show canvas
-
-        // Adjust the file path according to the selected year
-        const filePath = `/assets/pdf/${year}/${file}`;
-
-        // Here, you can use PDF.js or any other PDF library to render the PDF.
-        // For simplicity, you could set up a PDF viewer here or show the PDF in an iframe.
-
-        // Example using an iframe to show the PDF
-        const iframe = document.createElement('iframe');
-        iframe.src = filePath;
-        iframe.style.width = '100%';
-        iframe.style.height = '600px';
-        pdfViewer.innerHTML = ''; // Clear previous content
-        pdfViewer.appendChild(iframe);
-    }
-
-    // Event listeners for year selection
-    btn2022.addEventListener('click', function () {
-        showPDFButtons('2022');
     });
-    btn2023.addEventListener('click', function () {
-        showPDFButtons('2023');
-    });
-    btn2024.addEventListener('click', function () {
-        showPDFButtons('2024');
-    });
-
-    // Initialize with hiding elements
-    hideCanvasAndAlert();
 });
+
+function loadPDF(url) {
+    const canvas = document.getElementById('pdf-canvas');
+    const ctx = canvas.getContext('2d');
+
+    pdfjsLib.getDocument(url).promise.then(pdf => {
+        return pdf.getPage(1); // Ambil halaman pertama
+    }).then(page => {
+        const viewport = page.getViewport({ scale: 1.5 });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = {
+            canvasContext: ctx,
+            viewport: viewport
+        };
+        return page.render(renderContext).promise;
+    }).catch(error => {
+        console.error("PDF load error: ", error);
+        alert("Gagal membuka file PDF. Pastikan file tersedia dan tidak sedang diblokir oleh aplikasi seperti IDM.");
+    });
+}
