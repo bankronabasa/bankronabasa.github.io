@@ -1,8 +1,6 @@
 let selectedYear = null;
 let selectedFile = null;
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
 // Tombol tahun
 document.querySelectorAll('[id^=btn-20]').forEach(btn => {
     btn.addEventListener('click', () => {
