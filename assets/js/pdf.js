@@ -1,6 +1,8 @@
 let selectedYear = null;
 let selectedFile = null;
 
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
 // Tombol tahun
 document.querySelectorAll('[id^=btn-20]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -13,7 +15,7 @@ document.querySelectorAll('[id^=btn-20]').forEach(btn => {
         // Reset pilihan file
         selectedFile = null;
         document.getElementById('pdf-buttons').innerHTML = ''; // Kosongkan dulu tombol laporan
-        document.getElementById('pdf-canvas').parentElement.parentElement.style.display = 'none';
+        document.getElementById('pdf-canvas').classList.add('d-none');
 
         // Misalnya isi tombol file:
         const files = ['LKPK-LKP-01.pdf', 'LKPK-LKP-02.pdf', 'LKPK-LKP-03.pdf', 'LKPK-LKP-04.pdf', 'LKPK-LKP-05.pdf'];
@@ -34,23 +36,22 @@ document.querySelectorAll('[id^=btn-20]').forEach(btn => {
 });
 
 function loadPDF(url) {
+    const viewer = document.getElementById('pdf-viewer');
+    viewer.classList.remove('d-none');
+
     const canvas = document.getElementById('pdf-canvas');
     const ctx = canvas.getContext('2d');
 
     pdfjsLib.getDocument(url).promise.then(pdf => {
-        return pdf.getPage(1); // Ambil halaman pertama
+        return pdf.getPage(1);
     }).then(page => {
         const viewport = page.getViewport({ scale: 1.5 });
         canvas.height = viewport.height;
         canvas.width = viewport.width;
 
-        const renderContext = {
-            canvasContext: ctx,
-            viewport: viewport
-        };
-        return page.render(renderContext).promise;
+        return page.render({ canvasContext: ctx, viewport: viewport }).promise;
     }).catch(error => {
-        console.error("PDF load error: ", error);
-        alert("Gagal membuka file PDF. Pastikan file tersedia dan tidak sedang diblokir oleh aplikasi seperti IDM.");
+        console.error("Gagal load PDF:", error);
+        alert("Gagal membuka file PDF.");
     });
 }

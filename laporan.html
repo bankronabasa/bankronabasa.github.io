@@ -106,7 +106,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="border p-3 bg-light rounded shadow-sm" id="pdf-viewer" style="display:none;">
+                    <div class="border p-3 bg-light rounded shadow-sm d-none" id="pdf-viewer">
                         <canvas id="pdf-canvas" style="width: 100%; border: 1px solid #ccc;"></canvas>
                     </div>
                 </div>
@@ -150,9 +150,6 @@
     <!-- PDF.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="assets/js/pdf.js"></script>
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    </script>
 
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
