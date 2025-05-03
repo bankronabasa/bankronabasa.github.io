@@ -1,8 +1,12 @@
-.sitename {
+.sitename-wrapper span {
     font-size: 1.5rem;
     font-weight: 700;
     color: #000;
     margin: 0;
+}
+
+.sitename-wrapper small {
+    font-size: 1rem;
 }
 
 .equal-height-card {
