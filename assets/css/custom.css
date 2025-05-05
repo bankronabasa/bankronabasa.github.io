@@ -61,3 +61,18 @@
 .footer {
     margin-top: auto !important;
 }
+
+.swiper-slide {
+    width: 300px;
+    max-width: 100%;
+}
+
+.swiper {
+    padding-top: 40px;
+    padding-bottom: 60px;
+}
+
+.card {
+    border: none;
+    border-radius: 1rem;
+}
