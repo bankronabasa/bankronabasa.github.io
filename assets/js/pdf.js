@@ -115,6 +115,8 @@ function renderPage(pageNumber) {
 function renderPDF(filePath) {
     if (!filePath) return;
 
+    resetPageSelectors();
+
     loadingSpinner.style.display = 'block';
     pdfViewer.style.display = 'block';
     pdfControls.forEach(ctrl => ctrl.style.display = 'none');
@@ -205,8 +207,6 @@ yearOrTriwulanSelect.addEventListener('change', function () {
     const laporan = selectedData?.laporan?.find(l =>
         l.tahun == year && (triwulan ? l.triwulan === triwulan : true)
     );
-
-    resetPageSelectors();
 
     fileSelect.innerHTML = '<option value="">Pilih File</option>';
     pdfViewer.style.display = 'none';
