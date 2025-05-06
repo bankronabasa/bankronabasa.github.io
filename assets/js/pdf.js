@@ -48,6 +48,32 @@ const data = [
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
+const pageSelectTop = document.getElementById('pageSelectTop');
+const pageSelectBottom = document.getElementById('pageSelectBottom');
+
+function updatePageSelectors() {
+    [pageSelectTop, pageSelectBottom].forEach(select => {
+        select.innerHTML = ''; // clear old options
+        for (let i = 1; i <= totalPages; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = i;
+            if (i === currentPage) option.selected = true;
+            select.appendChild(option);
+        }
+    });
+}
+
+pageSelectTop.addEventListener('change', () => {
+    currentPage = parseInt(pageSelectTop.value);
+    renderPage(currentPage);
+});
+
+pageSelectBottom.addEventListener('change', () => {
+    currentPage = parseInt(pageSelectBottom.value);
+    renderPage(currentPage);
+});
+
 function renderPage(pageNumber) {
     pdfDoc.getPage(pageNumber).then(function (page) {
         const viewport = page.getViewport({ scale: 1.5 });
@@ -60,9 +86,7 @@ function renderPage(pageNumber) {
         };
 
         page.render(renderContext).promise.then(() => {
-            pageInfos.forEach(info => {
-                info.textContent = `Halaman ${currentPage} dari ${totalPages}`;
-            });
+            updatePageSelectors(); // update dropdown selection
             prevPageBtns.forEach(btn => btn.disabled = currentPage <= 1);
             nextPageBtns.forEach(btn => btn.disabled = currentPage >= totalPages);
         });
@@ -86,6 +110,7 @@ function renderPDF(filePath) {
         totalPages = pdfDoc.numPages;
         currentPage = 1;
 
+        updatePageSelectors();
         renderPage(1);
 
         loadingSpinner.style.display = 'none';

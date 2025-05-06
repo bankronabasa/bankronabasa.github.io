@@ -126,35 +126,42 @@
 
 
             <!-- PDF Viewer (Initially Hidden) -->
-            <div id="pdfViewer" class="pdf-viewer-container text-center" style="display:none;">
+            <div id="pdfViewer" class="pdf-viewer-container text-center" style="display: none;">
                 <!-- Kontrol atas -->
-                <div class="mt-4 mb-4 d-flex flex-row gap-2 justify-content-center align-items-center pdf-controls"
+                <div class="col-md-12 mt-4 mb-4 d-flex flex-row gap-2 justify-content-center align-items-center pdf-controls"
                     style="display: none;">
                     <button class="prevPage btn btn-primary btn-sm">Previous</button>
-                    <span class="pageInfo">Halaman 1 dari 1</span>
+                    <span class="pageInfo d-flex align-items-center gap-2">
+                        <span>Halaman</span>
+                        <select id="pageSelectTop" class="form-select form-select-sm" style="width: 80px;"></select>
+                        <span>dari 1</span>
+                    </span>
                     <button class="nextPage btn btn-primary btn-sm">Next</button>
                 </div>
 
                 <!-- Loading spinner -->
-                <div id="pdfLoading" class="my-4" style="display:none;">
+                <div id="pdfLoading" class="my-4" style="display: none;">
                     <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                     <div>Memuat PDF...</div>
                 </div>
 
+                <!-- Canvas PDF -->
                 <canvas id="pdfCanvas"></canvas>
 
                 <!-- Kontrol bawah -->
                 <div class="mt-4 mb-4 d-flex flex-row gap-2 justify-content-center align-items-center pdf-controls"
                     style="display: none;">
                     <button class="prevPage btn btn-primary btn-sm">Previous</button>
-                    <span class="pageInfo">Halaman 1 dari 1</span>
+                    <span class="pageInfo d-flex align-items-center gap-2">
+                        <span>Halaman</span>
+                        <select id="pageSelectBottom" class="form-select form-select-sm" style="width: 80px;"></select>
+                        <span>dari 1</span>
+                    </span>
                     <button class="nextPage btn btn-primary btn-sm">Next</button>
                 </div>
             </div>
-
-
         </div>
     </main>
 
