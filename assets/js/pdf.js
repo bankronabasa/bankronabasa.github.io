@@ -1,4 +1,5 @@
-const yearSelect = document.getElementById('yearSelect');
+const categorySelect = document.getElementById('categorySelect');
+const yearOrTriwulanSelect = document.getElementById('yearOrTriwulanSelect');
 const fileSelect = document.getElementById('fileSelect');
 const pdfViewer = document.getElementById('pdfViewer');
 const pdfCanvas = document.getElementById('pdfCanvas');
@@ -6,14 +7,45 @@ const ctx = pdfCanvas.getContext('2d');
 const prevPageBtn = document.getElementById('prevPage');
 const nextPageBtn = document.getElementById('nextPage');
 const pdfControls = document.getElementById('pdfControls');
+const pageInfo = document.getElementById('pageInfo');
 let pdfDoc = null;
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
-
 let currentPage = 1;
 let totalPages = 1;
 
-// Fungsi untuk render halaman pertama dari PDF
+const data = [
+    {
+        "kategori": "Laporan Keuangan Publikasi",
+        "laporan": [
+            {
+                "tahun": 2022,
+                "triwulan": "IV",
+                "file": ["LKPK-LKP-01.pdf", "LKPK-LKP-02.pdf", "LKPK-LKP-03.pdf", "LKPK-LKP-04.pdf", "LKPK-LKP-05.pdf"]
+            },
+            {
+                "tahun": 2023,
+                "triwulan": "IV",
+                "file": ["LKPK-LKP-01.pdf", "LKPK-LKP-02.pdf", "LKPK-LKP-03.pdf", "LKPK-LKP-04.pdf", "LKPK-LKP-05.pdf"]
+            },
+            {
+                "tahun": 2024,
+                "triwulan": "IV",
+                "file": ["LKPK-LKP-01.pdf", "LKPK-LKP-02.pdf", "LKPK-LKP-03.pdf", "LKPK-LKP-04.pdf", "LKPK-LKP-05.pdf"]
+            }
+        ]
+    },
+    {
+        "kategori": "Laporan Keuangan Tahunan",
+        "laporan": [
+            {
+                "tahun": 2024,
+                "file": ["Laporan Tahunan 2024.pdf"]
+            }
+        ]
+    }
+];
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+
 function renderPage(pageNumber) {
     pdfDoc.getPage(pageNumber).then(function (page) {
         const viewport = page.getViewport({ scale: 1.5 });
@@ -36,28 +68,23 @@ function renderPage(pageNumber) {
     });
 }
 
-// Fungsi untuk menampilkan PDF viewer
 function renderPDF(filePath) {
     if (!filePath) return;
-
     pdfjsLib.getDocument(filePath).promise.then(function (loadedPdf) {
         pdfDoc = loadedPdf;
         totalPages = pdfDoc.numPages;
         currentPage = 1;
-
         pdfViewer.style.display = 'block';
         pdfControls.style.display = totalPages > 1 ? 'block' : 'none';
-
-        renderPage(1); // Render halaman pertama
+        renderPage(1);
     }).catch(error => {
         console.error("Gagal memuat PDF:", error);
-        alert("File PDF tidak dapat dimuat. Pastikan file tersedia dan tidak corrupt.");
+        alert("File PDF tidak dapat dimuat.");
         pdfViewer.style.display = 'none';
         pdfControls.style.display = 'none';
     });
 }
 
-// Tombol navigasi halaman
 prevPageBtn.addEventListener('click', () => {
     if (currentPage > 1) {
         currentPage--;
@@ -72,54 +99,79 @@ nextPageBtn.addEventListener('click', () => {
     }
 });
 
-// Update pilihan file berdasarkan tahun yang dipilih
-yearSelect.addEventListener('change', function () {
-    const year = yearSelect.value;
-    fileSelect.innerHTML = '<option value="">Pilih File</option>';
+// Populate kategori
+document.addEventListener('DOMContentLoaded', function () {
+    data.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.kategori;
+        option.textContent = item.kategori;
+        categorySelect.appendChild(option);
+    });
 
-    if (year) {
-        const files = getFilesForYear(year);
-        files.forEach(file => {
+    yearOrTriwulanSelect.innerHTML = '<option value="">Pilih Tahun/Triwulan</option>';
+    fileSelect.innerHTML = '<option value="">Pilih File</option>';
+    pdfViewer.style.display = 'none';
+});
+
+// Saat kategori dipilih
+categorySelect.addEventListener('change', function () {
+    const selectedCategory = this.value;
+    const selectedData = data.find(item => item.kategori === selectedCategory);
+
+    yearOrTriwulanSelect.innerHTML = '<option value="">Pilih Tahun/Triwulan</option>';
+    fileSelect.innerHTML = '<option value="">Pilih File</option>';
+    pdfViewer.style.display = 'none';
+    ctx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+
+    if (selectedData) {
+        selectedData.laporan.forEach(lap => {
+            const option = document.createElement('option');
+            option.value = `${lap.tahun}${lap.triwulan ? '-' + lap.triwulan : ''}`;
+            option.textContent = lap.triwulan ? `Triwulan ${lap.triwulan} ${lap.tahun}` : `${lap.tahun}`;
+            yearOrTriwulanSelect.appendChild(option);
+        });
+    }
+});
+
+// Saat tahun/triwulan dipilih
+yearOrTriwulanSelect.addEventListener('change', function () {
+    const selectedCategory = categorySelect.value;
+    const selectedKey = this.value;
+    const [year, triwulan] = selectedKey.split('-');
+    const selectedData = data.find(item => item.kategori === selectedCategory);
+    const laporan = selectedData?.laporan?.find(l =>
+        l.tahun == year && (triwulan ? l.triwulan === triwulan : true)
+    );
+
+    fileSelect.innerHTML = '<option value="">Pilih File</option>';
+    pdfViewer.style.display = 'none';
+    ctx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+
+    if (laporan) {
+        laporan.file.forEach(file => {
             const option = document.createElement('option');
             option.value = file;
             option.textContent = file;
             fileSelect.appendChild(option);
         });
     }
-
-    // Sembunyikan viewer & reset canvas
-    pdfViewer.style.display = 'none';
-    ctx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
 });
 
-// Pilih file untuk merender PDF
+// Saat file dipilih
 fileSelect.addEventListener('change', function () {
-    const year = yearSelect.value;
-    const file = fileSelect.value;
-    const filePath = (year && file) ? `assets/pdf/${year}/${file}` : '';
+    const selectedCategory = categorySelect.value;
+    const selectedKey = yearOrTriwulanSelect.value;
+    const fileName = this.value;
 
-    // Sembunyikan viewer & reset canvas sebelum load baru
+    const [year] = selectedKey.split('-');
+    const categorySlug = selectedCategory.replace(/\s+/g, '-');
+
+    const filePath = fileName ? `assets/pdf/${categorySlug}/${year}/${fileName}` : '';
+    console.log(filePath);
     pdfViewer.style.display = 'none';
     ctx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
 
     if (filePath) {
         renderPDF(filePath);
     }
-});
-
-// Fungsi untuk mendapatkan file berdasarkan tahun
-function getFilesForYear(year) {
-    const fileMapping = {
-        '2022': ['LKPK-LKP-01.pdf', 'LKPK-LKP-02.pdf', 'LKPK-LKP-03.pdf', 'LKPK-LKP-04.pdf', 'LKPK-LKP-05.pdf'],
-        '2023': ['LKPK-LKP-01.pdf', 'LKPK-LKP-02.pdf', 'LKPK-LKP-03.pdf', 'LKPK-LKP-04.pdf', 'LKPK-LKP-05.pdf'],
-        '2024': ['LKPK-LKP-01.pdf', 'LKPK-LKP-02.pdf', 'LKPK-LKP-03.pdf', 'LKPK-LKP-04.pdf', 'LKPK-LKP-05.pdf']
-    };
-    return fileMapping[year] || [];
-}
-
-// Saat halaman pertama kali dimuat
-document.addEventListener('DOMContentLoaded', function () {
-    yearSelect.value = '';
-    fileSelect.innerHTML = '<option value="">Pilih File</option>';
-    pdfViewer.style.display = 'none';
 });
