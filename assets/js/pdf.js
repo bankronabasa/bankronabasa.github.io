@@ -58,6 +58,8 @@ function resetPageSelectors() {
     pageSelectBottom.innerHTML = '';
     totalPageTop.inertHTML = '';
     totalPageBottom.inertHTML = '';
+    nextPageBtns.forEach(btn => btn.disabled = true);
+    prevPageBtns.forEach(btn => btn.disabled = true);
 }
 
 function updatePageSelectors() {
@@ -204,6 +206,8 @@ yearOrTriwulanSelect.addEventListener('change', function () {
         l.tahun == year && (triwulan ? l.triwulan === triwulan : true)
     );
 
+    resetPageSelectors();
+
     fileSelect.innerHTML = '<option value="">Pilih File</option>';
     pdfViewer.style.display = 'none';
     ctx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
@@ -229,7 +233,7 @@ fileSelect.addEventListener('change', function () {
     const categorySlug = selectedCategory.replace(/\s+/g, '-');
 
     const filePath = fileName ? `assets/pdf/${categorySlug}/${year}/${fileName}` : '';
-    resetPageSelectors();
+
     pdfViewer.style.display = 'none';
     ctx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
 
