@@ -221,7 +221,7 @@ fileSelect.addEventListener('change', function () {
     const categorySlug = selectedCategory.replace(/\s+/g, '-');
 
     const filePath = fileName ? `assets/pdf/${categorySlug}/${year}/${fileName}` : '';
-    console.log(filePath);
+    resetPageSelectors();
     pdfViewer.style.display = 'none';
     ctx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
 
