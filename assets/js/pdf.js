@@ -4,10 +4,12 @@ const fileSelect = document.getElementById('fileSelect');
 const pdfViewer = document.getElementById('pdfViewer');
 const pdfCanvas = document.getElementById('pdfCanvas');
 const ctx = pdfCanvas.getContext('2d');
-const prevPageBtn = document.getElementById('prevPage');
-const nextPageBtn = document.getElementById('nextPage');
-const pdfControls = document.getElementById('pdfControls');
-const pageInfo = document.getElementById('pageInfo');
+const pdfControls = document.querySelectorAll('.pdf-controls');
+const prevPageBtns = document.querySelectorAll('.prevPage');
+const nextPageBtns = document.querySelectorAll('.nextPage');
+const pageInfos = document.querySelectorAll('.pageInfo');
+const loadingSpinner = document.getElementById('pdfLoading');
+
 let pdfDoc = null;
 let currentPage = 1;
 let totalPages = 1;
@@ -58,9 +60,11 @@ function renderPage(pageNumber) {
         };
 
         page.render(renderContext).promise.then(() => {
-            pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages}`;
-            prevPageBtn.disabled = currentPage <= 1;
-            nextPageBtn.disabled = currentPage >= totalPages;
+            pageInfos.forEach(info => {
+                info.textContent = `Halaman ${currentPage} dari ${totalPages}`;
+            });
+            prevPageBtns.forEach(btn => btn.disabled = currentPage <= 1);
+            nextPageBtns.forEach(btn => btn.disabled = currentPage >= totalPages);
         });
     }).catch(err => {
         console.error("Gagal merender halaman:", err);
@@ -68,36 +72,53 @@ function renderPage(pageNumber) {
     });
 }
 
+
 function renderPDF(filePath) {
     if (!filePath) return;
+
+    loadingSpinner.style.display = 'block';
+    pdfViewer.style.display = 'block';
+    pdfControls.forEach(ctrl => ctrl.style.display = 'none');
+    ctx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+
     pdfjsLib.getDocument(filePath).promise.then(function (loadedPdf) {
         pdfDoc = loadedPdf;
         totalPages = pdfDoc.numPages;
         currentPage = 1;
-        pdfViewer.style.display = 'block';
-        pdfControls.style.display = totalPages > 1 ? 'block' : 'none';
+
         renderPage(1);
+
+        loadingSpinner.style.display = 'none';
+        pdfControls.forEach(ctrl => {
+            ctrl.style.display = totalPages > 1 ? 'flex' : 'none';
+        });
     }).catch(error => {
         console.error("Gagal memuat PDF:", error);
         alert("File PDF tidak dapat dimuat.");
         pdfViewer.style.display = 'none';
-        pdfControls.style.display = 'none';
+        loadingSpinner.style.display = 'none';
     });
 }
 
-prevPageBtn.addEventListener('click', () => {
-    if (currentPage > 1) {
-        currentPage--;
-        renderPage(currentPage);
-    }
+
+prevPageBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderPage(currentPage);
+        }
+    });
 });
 
-nextPageBtn.addEventListener('click', () => {
-    if (currentPage < totalPages) {
-        currentPage++;
-        renderPage(currentPage);
-    }
+nextPageBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderPage(currentPage);
+        }
+    });
 });
+
 
 // Populate kategori
 document.addEventListener('DOMContentLoaded', function () {
@@ -156,6 +177,7 @@ yearOrTriwulanSelect.addEventListener('change', function () {
         });
     }
 });
+
 
 // Saat file dipilih
 fileSelect.addEventListener('change', function () {
