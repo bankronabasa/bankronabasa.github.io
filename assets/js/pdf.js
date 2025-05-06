@@ -51,9 +51,14 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs
 const pageSelectTop = document.getElementById('pageSelectTop');
 const pageSelectBottom = document.getElementById('pageSelectBottom');
 
+function resetPageSelectors() {
+    pageSelectTop.innerHTML = '';
+    pageSelectBottom.innerHTML = '';
+}
+
 function updatePageSelectors() {
     [pageSelectTop, pageSelectBottom].forEach(select => {
-        select.innerHTML = ''; // clear old options
+        select.innerHTML = '';
         for (let i = 1; i <= totalPages; i++) {
             const option = document.createElement('option');
             option.value = i;
@@ -106,6 +111,8 @@ function renderPDF(filePath) {
     ctx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
 
     pdfjsLib.getDocument(filePath).promise.then(function (loadedPdf) {
+        resetPageSelectors();
+
         pdfDoc = loadedPdf;
         totalPages = pdfDoc.numPages;
         currentPage = 1;

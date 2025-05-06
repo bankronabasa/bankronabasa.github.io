@@ -76,3 +76,12 @@
     border: none;
     border-radius: 1rem;
 }
+
+select[multiple],
+select {
+    overflow-y: auto;
+}
+
+select option {
+    line-height: 1.5em;
+}
