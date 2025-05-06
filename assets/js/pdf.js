@@ -50,10 +50,14 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs
 
 const pageSelectTop = document.getElementById('pageSelectTop');
 const pageSelectBottom = document.getElementById('pageSelectBottom');
+const totalPageTop = document.getElementById('totalPageTop');
+const totalPageBottom = document.getElementById('totalPageBottom');
 
 function resetPageSelectors() {
     pageSelectTop.innerHTML = '';
     pageSelectBottom.innerHTML = '';
+    totalPageTop.inertHTML = '';
+    totalPageBottom.inertHTML = '';
 }
 
 function updatePageSelectors() {
@@ -66,6 +70,10 @@ function updatePageSelectors() {
             if (i === currentPage) option.selected = true;
             select.appendChild(option);
         }
+    });
+
+    [totalPageTop, totalPageBottom].forEach(totalPage => {
+        totalPage.innerHTML = `dari ${totalPages}`;
     });
 }
 
