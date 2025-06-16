@@ -408,83 +408,116 @@
 
       <div class="container">
 
-        <div class="text-center mb-4">
-          <button class="btn btn-primary mx-2" onclick="showTab('tabdep')">Tabungan & Deposito</button>
-          <button class="btn btn-primary mx-2" onclick="showTab('kredit')">Kredit</button>
-        </div>
-
-        <div id="tabdep" class="tab-content active">
-          <div class="row gy-4 justify-content-center">
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-              <div class="service-item d-flex flex-column position-relative">
-                <div class="icon">
-                  <i class="bi bi-cash-stack" style="color: #0dcaf0;"></i>
-                </div>
-                <h3>Tabungan Simpanan Masyarakat Umum</h3>
-                <p>Produk simpanan untuk individu atau badan usaha dengan suku bunga bertingkat. Penyetoran dan
-                  penarikan dapat dilakukan
-                  kapan saja tanpa batasan, asalkan saldo mencukupi.
-                </p>
-                <div class="mt-auto">
-                  <button class="btn btn-primary btn-sm mt-4" data-bs-toggle="modal"
-                    data-bs-target="#detailTabunganDepositoModal">Detail...</button>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row g-4">
+              <!-- Card pertama: teks + gambar -->
+              <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                  <div class="card-body">
+                    <div class="card-text d-flex flex-column justify-content-between text-center">
+                      <span class="fs-4 fw-bold mb-2">Dijamin OJK dan LPS</span>
+                      <span>
+                        Bank Perekonomian Rakyat Robasa Terdaftar dan Diawasi Oleh Otoritas Jasa Keuangan (03K) serta
+                        merupakan Peserta Penjamin Simpanan LPS
+                      </span>
+                    </div>
+                  </div>
+                  <a href="assets/img/lps.jpg" title="Suku Bunga Depsito dan Tabungan" class="glightbox preview-link">
+                    <img src="assets/img/lps.jpg" class="card-img-bottom" alt="Gambar OJK dan LPS">
+                  </a>
                 </div>
               </div>
-            </div>
 
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-              <div class="service-item d-flex flex-column position-relative">
-                <div class="icon">
-                  <i class="bi bi-cash-stack" style="color: #0dcaf0;"></i>
-                </div>
-                <h3>Deposito Masyarakat Umum</h3>
-                <p>Produk deposito dengan keuntungan yang aman dan dapat diandalkan, memberikan solusi investasi
-                  jangka
-                  pendek untuk
-                  masyarakat umum.</p>
-                <div class="mt-auto">
-                  <button class="btn btn-primary btn-sm mt-4" data-bs-toggle="modal"
-                    data-bs-target="#detailTabunganDepositoModal">Detail...</button>
-                </div>
+              <!-- Card kedua: hanya gambar -->
+              <div class="col-md-6">
+                <a href="assets/img/sukubungadeposito&tabungan.jpg" title="Suku Bunga Depsito dan Tabungan"
+                  class="glightbox preview-link">
+                  <img src="assets/img/sukubungadeposito&tabungan.jpg" class="img-fluid" alt="">
+                </a>
               </div>
             </div>
-
           </div>
-        </div>
+          <div class="col-md-4">
+            <div class="text-center mb-4">
+              <button class="btn btn-primary mx-2" onclick="showTab('tabdep')">Tabungan & Deposito</button>
+              <button class="btn btn-primary mx-2" onclick="showTab('kredit')">Kredit</button>
+            </div>
 
-        <div id="kredit" class="tab-content" style="display: none;">
-          <div class="row gy-4 justify-content-center">
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-              <div class="service-item d-flex flex-column position-relative">
-                <div class="icon">
-                  <i class="bi bi-cash-stack" style="color: #0dcaf0;"></i>
+            <div id="tabdep" class="tab-content active">
+              <div class="row gy-4 justify-content-center">
+                <div class="col-lg-12 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                  <div class="service-item d-flex flex-column position-relative">
+                    <div class="icon">
+                      <i class="bi bi-cash-stack" style="color: #0dcaf0;"></i>
+                    </div>
+                    <h3>Tabungan Simpanan Masyarakat Umum</h3>
+                    <p>Produk simpanan untuk individu atau badan usaha dengan suku bunga bertingkat. Penyetoran dan
+                      penarikan dapat dilakukan
+                      kapan saja tanpa batasan, asalkan saldo mencukupi.
+                    </p>
+                    <div class="mt-auto">
+                      <button class="btn btn-primary btn-sm mt-4" data-bs-toggle="modal"
+                        data-bs-target="#detailTabunganDepositoModal">Detail...</button>
+                    </div>
+                  </div>
                 </div>
-                <h3>Kredit Modal Kerja</h3>
-                <p>Pinjaman yang dirancang untuk membantu modal usaha dengan suku bunga yang kompetitif, mendukung
-                  kelangsungan dan
-                  perkembangan bisnis.</p>
-                <div class="mt-auto">
-                  <button class="btn btn-primary btn-sm mt-4" data-bs-toggle="modal"
-                    data-bs-target="#detailKreditModal">Detail...</button>
+
+                <div class="col-lg-12 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                  <div class="service-item d-flex flex-column position-relative">
+                    <div class="icon">
+                      <i class="bi bi-cash-stack" style="color: #0dcaf0;"></i>
+                    </div>
+                    <h3>Deposito Masyarakat Umum</h3>
+                    <p>Produk deposito dengan keuntungan yang aman dan dapat diandalkan, memberikan solusi investasi
+                      jangka
+                      pendek untuk
+                      masyarakat umum.</p>
+                    <div class="mt-auto">
+                      <button class="btn btn-primary btn-sm mt-4" data-bs-toggle="modal"
+                        data-bs-target="#detailTabunganDepositoModal">Detail...</button>
+                    </div>
+                  </div>
                 </div>
+
               </div>
             </div>
 
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-              <div class="service-item d-flex flex-column position-relative">
-                <div class="icon">
-                  <i class="bi bi-cash-stack" style="color: #0dcaf0;"></i>
+            <div id="kredit" class="tab-content" style="display: none;">
+              <div class="row gy-4 justify-content-center">
+                <div class="col-lg-12 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                  <div class="service-item d-flex flex-column position-relative">
+                    <div class="icon">
+                      <i class="bi bi-cash-stack" style="color: #0dcaf0;"></i>
+                    </div>
+                    <h3>Kredit Modal Kerja</h3>
+                    <p>Pinjaman yang dirancang untuk membantu modal usaha dengan suku bunga yang kompetitif, mendukung
+                      kelangsungan dan
+                      perkembangan bisnis.</p>
+                    <div class="mt-auto">
+                      <button class="btn btn-primary btn-sm mt-4" data-bs-toggle="modal"
+                        data-bs-target="#detailKreditModal">Detail...</button>
+                    </div>
+                  </div>
                 </div>
-                <h3>Kredit Konsumtif</h3>
-                <p>Pinjaman untuk kebutuhan konsumsi pribadi, memberikan fleksibilitas dalam pengelolaan dana untuk
-                  berbagai keperluan.</p>
-                <div class="mt-auto">
-                  <button class="btn btn-primary btn-sm mt-4" data-bs-toggle="modal"
-                    data-bs-target="#detailKreditModal">Detail...</button>
+
+                <div class="col-lg-12 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                  <div class="service-item d-flex flex-column position-relative">
+                    <div class="icon">
+                      <i class="bi bi-cash-stack" style="color: #0dcaf0;"></i>
+                    </div>
+                    <h3>Kredit Konsumtif</h3>
+                    <p>Pinjaman untuk kebutuhan konsumsi pribadi, memberikan fleksibilitas dalam pengelolaan dana untuk
+                      berbagai keperluan.</p>
+                    <div class="mt-auto">
+                      <button class="btn btn-primary btn-sm mt-4" data-bs-toggle="modal"
+                        data-bs-target="#detailKreditModal">Detail...</button>
+                    </div>
+                  </div>
                 </div>
+
               </div>
             </div>
-
           </div>
         </div>
 
