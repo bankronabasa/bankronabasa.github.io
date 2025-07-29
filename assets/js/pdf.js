@@ -35,7 +35,7 @@ const data = [
             },
             {
                 "tahun": 2025,
-                "triwulan": "V",
+                "triwulan": "IV",
                 "file": ["LKPK-LKP-01.pdf", "LKPK-LKP-02.pdf", "LKPK-LKP-03.pdf", "LKPK-LKP-04.pdf", "LKPK-LKP-05.pdf"]
             }
         ]
