@@ -37,6 +37,11 @@ const data = [
                 "tahun": 2025,
                 "triwulan": "II",
                 "file": ["LKPK-LKP-01.pdf", "LKPK-LKP-02.pdf", "LKPK-LKP-03.pdf", "LKPK-LKP-04.pdf", "LKPK-LKP-05.pdf"]
+            },
+            {
+                "tahun": 2025,
+                "triwulan": "III",
+                "file": ["LKPK-LKP-01.pdf", "LKPK-LKP-02.pdf", "LKPK-LKP-03.pdf", "LKPK-LKP-04.pdf", "LKPK-LKP-05.pdf"]
             }
         ]
     },
@@ -234,10 +239,17 @@ fileSelect.addEventListener('change', function () {
     const selectedKey = yearOrTriwulanSelect.value;
     const fileName = this.value;
 
-    const [year] = selectedKey.split('-');
+    const [year, triwulan] = selectedKey.split('-');
     const categorySlug = selectedCategory.replace(/\s+/g, '-');
 
-    const filePath = fileName ? `assets/pdf/${categorySlug}/${year}/${fileName}` : '';
+    let filePath = '';
+
+    // Jika kategori adalah Laporan Keuangan Publikasi, tambahkan folder triwulan
+    if (categorySlug === 'Laporan-Keuangan-Publikasi' && triwulan) {
+        filePath = fileName ? `assets/pdf/${categorySlug}/${year}/${triwulan}/${fileName}` : '';
+    } else {
+        filePath = fileName ? `assets/pdf/${categorySlug}/${year}/${fileName}` : '';
+    }
 
     pdfViewer.style.display = 'none';
     ctx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
