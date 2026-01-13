@@ -57,7 +57,7 @@ const data = [
     },
     {
         "kategori": "Rancangan Penggabungan",
-        "file": ["Pengumuman REVISI Bank Ronabasa 13 Januari 2026_3x525 FC_eri.pdf"]
+        "file": ["Pengumuman REVISI Bank Ronabasa 13 Januari 2026.pdf"]
     }
 ];
 
