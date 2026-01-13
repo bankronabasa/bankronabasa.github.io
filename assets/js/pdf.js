@@ -268,11 +268,15 @@ fileSelect.addEventListener('change', function () {
 
     let filePath = '';
 
-    // Jika kategori adalah Laporan Keuangan Publikasi, tambahkan folder triwulan
-    if (categorySlug === 'Laporan-Keuangan-Publikasi' && triwulan) {
-        filePath = fileName ? `assets/pdf/${categorySlug}/${year}/${triwulan}/${fileName}` : '';
+    if (selectedCategory == 'Rancangan Penggabungan') {
+        filePath = fileName ? `assets/pdf/${categorySlug}/${fileName}` : '';
     } else {
-        filePath = fileName ? `assets/pdf/${categorySlug}/${year}/${fileName}` : '';
+        // Jika kategori adalah Laporan Keuangan Publikasi, tambahkan folder triwulan
+        if (categorySlug === 'Laporan-Keuangan-Publikasi' && triwulan) {
+            filePath = fileName ? `assets/pdf/${categorySlug}/${year}/${triwulan}/${fileName}` : '';
+        } else {
+            filePath = fileName ? `assets/pdf/${categorySlug}/${year}/${fileName}` : '';
+        }
     }
 
     pdfViewer.style.display = 'none';
