@@ -1,4 +1,5 @@
 const categorySelect = document.getElementById('categorySelect');
+const divyearOrTriwulanSelect = document.getElementById('div-yearOrTriwulanSelect');
 const yearOrTriwulanSelect = document.getElementById('yearOrTriwulanSelect');
 const fileSelect = document.getElementById('fileSelect');
 const pdfViewer = document.getElementById('pdfViewer');
@@ -53,6 +54,10 @@ const data = [
                 "file": ["Laporan Tahunan 2024.pdf"]
             }
         ]
+    },
+    {
+        "kategori": "Rancangan Penggabungan",
+        "file": ["Pengumuman REVISI Bank Ronabasa 13 Januari 2026_3x525 FC_eri.pdf"]
     }
 ];
 
@@ -198,13 +203,32 @@ categorySelect.addEventListener('change', function () {
     pdfViewer.style.display = 'none';
     ctx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
 
-    if (selectedData) {
-        selectedData.laporan.forEach(lap => {
-            const option = document.createElement('option');
-            option.value = `${lap.tahun}${lap.triwulan ? '-' + lap.triwulan : ''}`;
-            option.textContent = lap.triwulan ? `Triwulan ${lap.triwulan} ${lap.tahun}` : `${lap.tahun}`;
-            yearOrTriwulanSelect.appendChild(option);
-        });
+    if (selectedCategory == 'Rancangan Penggabungan') {
+        divyearOrTriwulanSelect.classList.add('visually-hidden');
+
+        fileSelect.innerHTML = '<option value="">Pilih File</option>';
+        pdfViewer.style.display = 'none';
+        ctx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+
+        if (selectedData) {
+            selectedData.file.forEach(file => {
+                const option = document.createElement('option');
+                option.value = file;
+                option.textContent = file;
+                fileSelect.appendChild(option);
+            });
+        }
+    } else {
+        divyearOrTriwulanSelect.classList.remove('visually-hidden');
+
+        if (selectedData) {
+            selectedData.laporan.forEach(lap => {
+                const option = document.createElement('option');
+                option.value = `${lap.tahun}${lap.triwulan ? '-' + lap.triwulan : ''}`;
+                option.textContent = lap.triwulan ? `Triwulan ${lap.triwulan} ${lap.tahun}` : `${lap.tahun}`;
+                yearOrTriwulanSelect.appendChild(option);
+            });
+        }
     }
 });
 
